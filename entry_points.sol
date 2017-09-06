@@ -22,8 +22,8 @@ contract SistemaDePonto {
     address private administrador;
     uint count;
     mapping (address => Funcionario) private funcionarios;
-    //mapping (address => Registro[]) public registros;
-    Registro[] registros;
+    mapping (address => mapping(uint => Registro)) private registros;
+    mapping (address => uint) posicao;
 
     function SistemaDePonto(){
         administrador = msg.sender;
@@ -43,6 +43,7 @@ contract SistemaDePonto {
         }
         //Caso tudo esteja OK add o novo Funcionário
         funcionarios[_addressFuncionario] = Funcionario(_addressFuncionario,_horaEntrada,_horaSaida);
+        posicao[_addressFuncionario] = 0;
         //Aumenta a quantidade de usuários add
         count++;
     }
@@ -52,22 +53,18 @@ contract SistemaDePonto {
         require(getAdministrador() != msg.sender);
         //Somente Funcionário cadastrado bate o ponto
         require(funcionarios[msg.sender].horaEntrada > 0);
-        //Se tiver sido cadastrado pelo menos um Registro de Ponto
-        if(registros.length > 0){
-            //Não se pode bater uma entrada seguida de outra entrada e nem uma saída logo após outra saída
-            require(registros[registros.length-1].status != _status);
-        }
-        registros.push(Registro(_addressFuncionario,_horario,_status));
+        //Registra o ponto do Funcionário
+        registros[_addressFuncionario][posicao[_addressFuncionario]] = Registro(_addressFuncionario,_horario,_status);
+        //Muda valor da última posição
+        posicao[_addressFuncionario] = posicao[_addressFuncionario] + 1;
     }
 
     function getFuncionario(address _addressFuncionario) returns(uint _horaEntrada,uint _horaSaida){
         return (funcionarios[_addressFuncionario].horaEntrada,funcionarios[_addressFuncionario].horaSaida);
     }
 
-    function getRegistros() returns(uint _horario){
-        for(uint i=0;i<registros.length;i++){
-            return registros[i].horario;
-        }
+    function getPos(address _addressFuncionario) returns (uint _pos){
+        return posicao[_addressFuncionario];
     }
 
 }
