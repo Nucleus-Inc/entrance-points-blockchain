@@ -19,8 +19,8 @@ contract SistemaDePonto {
         bool status;
     }
 
-    address private administrador;
     uint count;
+    address private administrador;
     mapping (address => Funcionario) private funcionarios;
     mapping (address => mapping(uint => Registro)) private registros;
     mapping (address => uint) posicao;
@@ -56,15 +56,29 @@ contract SistemaDePonto {
         //Registra o ponto do Funcionário
         registros[_addressFuncionario][posicao[_addressFuncionario]] = Registro(_addressFuncionario,_horario,_status);
         //Muda valor da última posição
-        posicao[_addressFuncionario] = posicao[_addressFuncionario] + 1;
+        posicao[_addressFuncionario] += 1;
     }
 
-    function getFuncionario(address _addressFuncionario) returns(uint _horaEntrada,uint _horaSaida){
+    function removerUltimoPonto(address _addressFuncionario){
+        //Marca a última posíção utilizada como livre no hashmap
+        posicao[_addressFuncionario] -= 1;
+    }
+
+    function removerFuncionario(address _addressFuncionario){
+        //Libera em memória Funcionário add ao hashmap
+        delete funcionarios[_addressFuncionario];
+    }
+
+    function getHorarioCadastrado(address _addressFuncionario) returns(uint _horaEntrada,uint _horaSaida){
         return (funcionarios[_addressFuncionario].horaEntrada,funcionarios[_addressFuncionario].horaSaida);
     }
 
-    function getPos(address _addressFuncionario) returns (uint _pos){
+    function getUltimaPosicao(address _addressFuncionario) returns (uint _pos){
         return posicao[_addressFuncionario];
+    }
+
+    function getUltimoPonto(address _addressFuncionario) returns (uint _horario,bool _status){
+        return (registros[_addressFuncionario][posicao[_addressFuncionario]-1].horario,registros[_addressFuncionario][posicao[_addressFuncionario]-1].status);
     }
 
 }
