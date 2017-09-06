@@ -60,11 +60,15 @@ contract SistemaDePonto {
     }
 
     function removerUltimoPonto(address _addressFuncionario){
+        //Somente o Administrador pode remover o último ponto batido
+        require(getAdministrador()==msg.sender);
         //Marca a última posíção utilizada como livre no hashmap
         posicao[_addressFuncionario] -= 1;
     }
 
     function removerFuncionario(address _addressFuncionario){
+        //Somente o Administrador pode remover Funcionários
+        require(getAdministrador()==msg.sender);
         //Libera em memória Funcionário add ao hashmap
         delete funcionarios[_addressFuncionario];
     }
