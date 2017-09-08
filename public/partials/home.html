@@ -1,1 +1,22 @@
-<h1 class="text-center">Entrance Points Blockchain</h1>
+<div class="jumbotron">
+  <h1 class="text-center">Entrance Points Blockchain</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <h3>Entrance Points</h3>
+    <button ng-click="entranceModalShow(true)" class="btn btn-outline-primary">Input</button>
+    <button ng-click="entranceModalShow(false)" class="btn btn-outline-secondary">Output</button>
+  </div>
+  <div class="row">
+    <h3>User</h3>
+    <button ng-click="userModalShow(true)" class="btn btn-outline-success">Create</button>
+    <button ng-click="userModalShow(false)"class="btn btn-outline-info">Remove</button>
+  </div>
+  <div class="row">
+    <h3>Get Infos</h3>
+    <button ng-click="getModalShow('adm')" class="btn btn-outline-warning">Administrator</button>
+    <button ng-click="getModalShow('lsp')" class="btn btn-outline-danger">Last Position</button>
+    <button ng-click="getModalShow('lse')" class="btn btn-outline-primary">Last Entrance</button>
+    <button ng-click="getModalShow('tim')" class="btn btn-outline-secondary">Time</button>
+  </div>
+</div>

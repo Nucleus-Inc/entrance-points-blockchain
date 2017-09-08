@@ -1,4 +1,4 @@
-angular.module('entrance-points',['ngRoute'])
+angular.module('entrance-points',['ngRoute','angularModalService','angularMoment'])
   .config(function($routeProvider){
     $routeProvider
       .when('/',{
@@ -6,4 +6,7 @@ angular.module('entrance-points',['ngRoute'])
         controller: 'HomeController'
       })
       .otherwise({redirectTo:'/'});
+  })
+  .run(function(amMoment) {
+  	amMoment.changeLocale('pt-br');
   });
