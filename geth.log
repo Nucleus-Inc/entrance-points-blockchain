@@ -1,0 +1,10 @@
+INFO [09-11|18:27:26] Starting peer-to-peer node               instance=Geth/v1.6.7-stable-ab5646c5/windows-amd64/go1.8.3
+INFO [09-11|18:27:26] Allocated cache and file handles         database="C:\\Users\\Eduardo Castro\\AppData\\Roaming\\Ethereum\\geth\\chaindata" cache=128 handles=1024
+INFO [09-11|18:27:27] Initialised chain configuration          config="{ChainID: 1 Homestead: 1150000 DAO: 1920000 DAOSupport: true EIP150: 2463000 EIP155: 2675000 EIP158: 2675000 Metropolis: 9223372036854775807 Engine: ethash}"
+INFO [09-11|18:27:27] Disk storage enabled for ethash caches   dir="C:\\Users\\Eduardo Castro\\AppData\\Roaming\\Ethereum\\geth\\ethash" count=3
+INFO [09-11|18:27:27] Disk storage enabled for ethash DAGs     dir="C:\\Users\\Eduardo Castro\\AppData\\Ethash"                          count=2
+INFO [09-11|18:27:27] Initialising Ethereum protocol           versions="[63 62]" network=1
+INFO [09-11|18:27:27] Loaded most recent local header          number=0 hash=d4e567…cb8fa3 td=17179869184
+INFO [09-11|18:27:27] Loaded most recent local full block      number=0 hash=d4e567…cb8fa3 td=17179869184
+INFO [09-11|18:27:27] Loaded most recent local fast block      number=0 hash=d4e567…cb8fa3 td=17179869184
+INFO [09-11|18:27:27] Starting P2P networking 

@@ -1,5 +1,5 @@
-angular.module('entrance-points').controller('HomeController',['$scope','ModalService',
-  function($scope,ModalService){
+angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService',
+  function($scope,ModalService,EntranceService){
 
     $scope.entranceModalShow = function(status){
       var modalTitle = status ? "Do you want to register your entry?" : "Do you want to register your output?";
@@ -12,8 +12,22 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
       }).then(function(modal) {
         modal.element.modal();
         modal.close.then(function(result) {
-          //$scope.message = result ? "You said Yes" : "You said No";
-          console.log(result);
+          if(result.msg){
+            result.body.status = status;
+            if(status){ //input
+              EntranceService.input(result.body).then(function(res){
+                
+              }).catch(function(err){
+
+              });
+            }else{ //output
+              EntranceService.input(result.body).then(function(res){
+
+              }).catch(function(err){
+
+              });
+            }
+          }
         });
       });
     };

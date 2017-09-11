@@ -6,7 +6,11 @@
         <h4 class="modal-title">{{title}}</h4>
       </div>
       <div class="modal-body">
-      <span>{{message.time | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</span>
+        <span>{{time | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</span>
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon border-radius-off"><i class="fa fa-id-badge" aria-hidden="true"></i></span>
+          <input type="text" class="form-control border-radius-off" ng-model="address" placeholder="address" aria-describedby="basic-addon1">
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" ng-click="close(false)" class="btn btn-outline-secondary" data-dismiss="modal">No</button>
