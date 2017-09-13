@@ -5,4 +5,7 @@ module.exports = function(app){
   app.route('/api/contract/entrance')
     .post(controller.entrancePoints);
 
+  app.route('/api/contract/user/create')
+  	.post(controller.createUser); 
+
 }

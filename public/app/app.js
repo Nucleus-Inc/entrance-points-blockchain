@@ -1,4 +1,4 @@
-angular.module('entrance-points',['ngRoute','angularModalService','angularMoment'])
+angular.module('entrance-points',['ngRoute','angularModalService','angularMoment','moment-picker'])
   .config(function($routeProvider){
     $routeProvider
       .when('/',{

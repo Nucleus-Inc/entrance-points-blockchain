@@ -16,4 +16,12 @@ angular.module('entrance-points').service('EntranceService',function($http){
     });
   };
 
+  this.create = function(body){
+    return $http.post('/api/contract/user/create',body).then(function(res){
+      return res;
+    }).catch(function(err){
+      return err;
+    });
+  };
+
 });

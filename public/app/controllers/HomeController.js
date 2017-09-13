@@ -16,15 +16,15 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
             result.body.status = status;
             if(status){ //input
               EntranceService.input(result.body).then(function(res){
-                
+                console.log(res);
               }).catch(function(err){
-
+                console.log(err);
               });
             }else{ //output
-              EntranceService.input(result.body).then(function(res){
-
+              EntranceService.output(result.body).then(function(res){
+                console.log(res);
               }).catch(function(err){
-
+                console.log(err);
               });
             }
           }
@@ -43,8 +43,13 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
       }).then(function(modal) {
         modal.element.modal();
         modal.close.then(function(result) {
-          //$scope.message = result ? "You said Yes" : "You said No";
-          console.log(result);
+          if(result.msg){
+            EntranceService.create(result.body).then(function(res){
+              console.log(res);
+            }).catch(function(err){
+              console.log(err);
+            });
+          }
         });
       });
     };

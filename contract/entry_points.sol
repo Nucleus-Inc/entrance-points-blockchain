@@ -1,88 +1,86 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.11;
 
-contract SistemaDePonto {
+contract EntrancePoints {
 
-    struct Funcionario {
-        address addressFuncionario;
-        uint horaEntrada;
-        uint horaSaida;
+    struct Employee {
+        address employee_id;
+        bytes8 time_input;
+        bytes8 time_output;
     }
 
-    struct Registro {
-        address addressFuncionario;
-        uint horario;
-        /*
-        TABELA REPRESENTATIVA: "status"
-          true = ENTRADA;
-          false = SAÍDA;
-        */
+    struct Record {
+        address employee_id;
+        bytes8 time;
+        bytes16 date;
         bool status;
     }
 
-    uint count;
-    address private administrador;
-    mapping (address => Funcionario) private funcionarios;
-    mapping (address => mapping(uint => Registro)) private registros;
-    mapping (address => uint) posicao;
-
-    function SistemaDePonto(){
-        administrador = msg.sender;
+    address private administrator;
+    bool private is_empty;
+    
+    mapping (address => Employee) private employees;
+    mapping (address => mapping(uint => Record)) private records;
+    mapping (address => uint) private position;
+    
+    event EmployeeCreateEvent(address _employee_id,bytes8 _time_input,bytes8 _time_output,uint _code);
+    event RecordEvent(address _employee_id,bytes8 _time,bytes16 _date,bool _status,uint _code);
+    event RecordDeleteEvent(address _employee_id,uint _code);
+    event EmployeeDeleteEvent(address _employee_id,uint _code);
+    
+    function EntrancePoints(){
+        administrator = msg.sender;
+        is_empty = true;
+    }
+    
+    function getAdministrator() constant returns(address _administrator) {
+        return administrator;
+    }
+    
+    function getHours(address _employee_id) constant returns(bytes8 _time_input,bytes8 time_output){
+        return (employees[_employee_id].time_input,employees[_employee_id].time_output);
+    }
+    
+    function getLastPosition(address _employee_id) constant returns(uint _position){
+        return (position[_employee_id]);
+    }
+    
+    function getLastRecord(address _employee_id) constant returns(bytes8 _time,bytes16 _date,bool _status){
+        return (records[_employee_id][position[_employee_id]-1].time,records[_employee_id][position[_employee_id]-1].date,records[_employee_id][position[_employee_id]-1].status);
+    }
+    
+    function createEmployee(address _employee_id,bytes8 _time_input,bytes8 _time_output) returns(uint _code) {
+        require(administrator==msg.sender);
+        if(!is_empty)
+            require(employees[_employee_id].employee_id!=_employee_id);
+        employees[_employee_id] = Employee(_employee_id,_time_input,_time_output);
+        position[_employee_id] = 0;
+        is_empty = false;
+        EmployeeCreateEvent(_employee_id,_time_input,_time_output,200);
+        return 200;
+    }
+    
+    function record(address _employee_id,bytes8 _time,bytes16 _date,bool _status) returns(uint _code) {
+        require(administrator!=msg.sender);
+        require(employees[_employee_id].employee_id>0);
+        require(msg.sender==_employee_id);
+        records[_employee_id][position[_employee_id]]=Record(_employee_id,_time,_date,_status);
+        position[_employee_id]+=1;
+        RecordEvent(_employee_id,_time,_date,_status,200);
+        return 200;
     }
 
-    function getAdministrador() returns(address _administrador) {
-        return administrador;
+    function recordDelete(address _employee_id) returns(uint _code){
+        require(administrator==msg.sender);
+        delete position[_employee_id];
+        RecordDeleteEvent(_employee_id,200);
+        return 200;
     }
-
-    function criarFuncionario(address _addressFuncionario,uint _horaEntrada,uint _horaSaida){
-        //Somente o Administrador pode criar novos Funcionários
-        require(getAdministrador()==msg.sender);
-        //Se não é o primeiro Funcionário a ser add
-        if(count > 0){
-            //Não pode ser criado um novo Funcionário com o mesmo endereço
-            require(funcionarios[_addressFuncionario].addressFuncionario!=_addressFuncionario);
-        }
-        //Caso tudo esteja OK add o novo Funcionário
-        funcionarios[_addressFuncionario] = Funcionario(_addressFuncionario,_horaEntrada,_horaSaida);
-        posicao[_addressFuncionario] = 0;
-        //Aumenta a quantidade de usuários add
-        count++;
-    }
-
-    function baterPonto(address _addressFuncionario,uint _horario,bool _status){
-        //Administrador não bate ponto
-        require(getAdministrador() != msg.sender);
-        //Somente Funcionário cadastrado bate o ponto
-        require(funcionarios[msg.sender].horaEntrada > 0);
-        //Registra o ponto do Funcionário
-        registros[_addressFuncionario][posicao[_addressFuncionario]] = Registro(_addressFuncionario,_horario,_status);
-        //Muda valor da última posição
-        posicao[_addressFuncionario] += 1;
-    }
-
-    function removerUltimoPonto(address _addressFuncionario){
-        //Somente o Administrador pode remover o último ponto batido
-        require(getAdministrador()==msg.sender);
-        //Marca a última posíção utilizada como livre no hashmap
-        posicao[_addressFuncionario] -= 1;
-    }
-
-    function removerFuncionario(address _addressFuncionario){
-        //Somente o Administrador pode remover Funcionários
-        require(getAdministrador()==msg.sender);
-        //Libera em memória Funcionário add ao hashmap
-        delete funcionarios[_addressFuncionario];
-    }
-
-    function getHorarioCadastrado(address _addressFuncionario) returns(uint _horaEntrada,uint _horaSaida){
-        return (funcionarios[_addressFuncionario].horaEntrada,funcionarios[_addressFuncionario].horaSaida);
-    }
-
-    function getUltimaPosicao(address _addressFuncionario) returns (uint _pos){
-        return posicao[_addressFuncionario];
-    }
-
-    function getUltimoPonto(address _addressFuncionario) returns (uint _horario,bool _status){
-        return (registros[_addressFuncionario][posicao[_addressFuncionario]-1].horario,registros[_addressFuncionario][posicao[_addressFuncionario]-1].status);
+    
+    function employeeDelete(address _employee_id) returns(uint _code){
+        require(administrator==msg.sender);
+        delete employees[_employee_id];
+        EmployeeDeleteEvent(_employee_id,200);
+        return 200;
     }
 
 }

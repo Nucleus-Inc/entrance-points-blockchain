@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Nucleus-Inc/entrance-points-blockchain#readme",
   "dependencies": {
+    "angular-moment-picker": "^0.10.1",
+    "bignumber.js": "^4.0.4",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.7",
