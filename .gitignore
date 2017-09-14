@@ -1,3 +1,4 @@
 /geth
 /node_modules
 /public/bower_components
+/public/assets/sass/.sass-cache
