@@ -45,7 +45,7 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
         modal.close.then(function(result) {
           if(result.msg){
             EntranceService.create(result.body).then(function(res){
-              console.log(res);
+              $scope.customer = res.data;
             }).catch(function(err){
               console.log(err);
             });

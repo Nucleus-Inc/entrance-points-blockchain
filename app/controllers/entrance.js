@@ -1,56 +1,82 @@
 var Web3 = require('web3');
-var BigNumber = require('bignumber.js');
+var config = require('../../config/config');
 
 module.exports = function(app){
 
   //var Entrance = app.models.entrance;
   var controller = {};
 
-  controller.entrancePoints = function(req,res){
-    
+  var connection = function(){
+
     var web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8545'));
-    
+    web3.setProvider(new web3.providers.HttpProvider(config.uri));
     web3.eth.defaultAccount = web3.eth.coinbase;
     
-    var abi = [{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getHorarioCadastrado","outputs":[{"name":"_horaEntrada","type":"uint256"},{"name":"_horaSaida","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"removerUltimoPonto","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getUltimaPosicao","outputs":[{"name":"_pos","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getAdministrador","outputs":[{"name":"_administrador","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getUltimoPonto","outputs":[{"name":"_horario","type":"uint256"},{"name":"_status","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"},{"name":"_horaEntrada","type":"uint256"},{"name":"_horaSaida","type":"uint256"}],"name":"criarFuncionario","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"removerFuncionario","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"},{"name":"_horario","type":"uint256"},{"name":"_status","type":"bool"}],"name":"baterPonto","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
-    var SistemaDePonto = web3.eth.contract(abi);
-    var c = SistemaDePonto.at('0x9e61c4096d43dE9A1e6FFb31402FEeC957E11453');
+    var abi = config.abi;
+    var EntrancePoints = web3.eth.contract(abi);
+    var instanceContract = EntrancePoints.at(config.address);
 
-    var address = web3.eth.accounts[1]+"";
-    c.getHorarioCadastrado.call(address,{from: web3.eth.accounts[0]},function(err,data){
-      if(err)
-        console.log(err);
-      console.log(data);
-    });
+    return {'instance': instanceContract,'web3': web3};
+
+  }
+
+  controller.entrancePoints = function(req,res){
+    
+    var contract = connection();
+
+    var instanceContract = contract.instance;
 
   };
 
   controller.createUser = function(req,res){
-    
-    var web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8545'));
-    
-    web3.eth.defaultAccount = web3.eth.coinbase;
-    
-    var abi = [{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getHorarioCadastrado","outputs":[{"name":"_horaEntrada","type":"uint256"},{"name":"_horaSaida","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"removerUltimoPonto","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getUltimaPosicao","outputs":[{"name":"_pos","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getAdministrador","outputs":[{"name":"_administrador","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"getUltimoPonto","outputs":[{"name":"_horario","type":"uint256"},{"name":"_status","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"},{"name":"_horaEntrada","type":"uint256"},{"name":"_horaSaida","type":"uint256"}],"name":"criarFuncionario","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"}],"name":"removerFuncionario","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_addressFuncionario","type":"address"},{"name":"_horario","type":"uint256"},{"name":"_status","type":"bool"}],"name":"baterPonto","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
-    var SistemaDePonto = web3.eth.contract(abi);
-    var c = SistemaDePonto.at('0x9e61c4096d43dE9A1e6FFb31402FEeC957E11453');    
 
+    var contract = connection();
+
+    var instanceContract = contract.instance;
+
+    var web3 = contract.web3;
+    
     var personal = web3.personal;
-    personal.unlockAccount(web3.eth.accounts[0], '1234', 30000);
+    
+    personal.unlockAccount(web3.eth.accounts[0], config.privateKey, config.gasLimit);
 
-    //var newPersonal = personal.newAccount("123456789");
+    web3.eth.defaultBlock = web3.eth.blockNumber;
 
-    //console.log(newPersonal);
-
-    c.criarFuncionario.call(web3.eth.accounts[1]+"",700,1080,{from: web3.eth.accounts[0]},function(err,data){
+    instanceContract.createEmployee(req.body.privateKey,req.body.inputTime,req.body.outputTime,{from: web3.eth.accounts[0]},function(err,data){
       if(err)
-        console.log(err);
-      console.log(data);
+        res.json({'data': err});
+      else
+        txHash = data;
     });
 
-    //web3.toAscii('0x31332d30392d32303137000000000000')
+    var event = instanceContract.EmployeeCreateEvent();
+
+    event.watch(function(error, result){
+      if(error)
+        res.json({'data': error});
+      else{
+        res.json(result);
+      } 
+    });
+
+    //web3.toAscii('0x31332d30392d32303137000000000000')*/
+
+    /*{
+  "address": "0x10105958f46df106c361a42d1bb5afc254ceaadf",
+  "blockNumber": 9573,
+  "transactionHash": "0xac901e3f8c61add70ab2e4608de8122a269a122bfc87525e4998f65ffac652d9",
+  "transactionIndex": 0,
+  "blockHash": "0x79237ec3d4d3fe99f8f637a6b7ab1dcdd99c635792e945abb0fb1b7b8fcc83c7",
+  "logIndex": 0,
+  "removed": false,
+  "event": "EmployeeCreateEvent",
+  "args": {
+    "_employee_id": "0x420e209ec411c92504dc17d7ef86e0e53e1f451e",
+    "_time_input": "0x38",
+    "_time_output": "0x31",
+    "_code": "200"
+  }
+}*/
 
   };
 

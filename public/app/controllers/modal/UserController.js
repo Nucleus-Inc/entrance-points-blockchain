@@ -13,9 +13,9 @@ angular.module('entrance-points').controller('UserController',['$scope','close',
       var res = {
         'msg': result,
         'body': {
-          'address': $scope.address,
-          'input': $scope.input.getHours()+':'+$scope.input.getMinutes(),
-          'output': $scope.output.getHours()+':'+$scope.output.getMinutes()
+          'privateKey': $scope.address,
+          'inputTime': $scope.input.getHours()+':'+$scope.input.getMinutes(),
+          'outputTime': $scope.output.getHours()+':'+$scope.output.getMinutes()
         }
       };
    	  close(res, 500); // close, but give 500ms for bootstrap to animate
