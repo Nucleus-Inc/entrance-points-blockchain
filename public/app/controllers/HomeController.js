@@ -1,6 +1,44 @@
 angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService',
   function($scope,ModalService,EntranceService){
 
+    EntranceService.logs().then(function(res){
+      $scope.customers = res.data;
+    }).catch(function(err){
+      console.log(err);
+    });
+
+    EntranceService.address().then(function(res){
+      console.log(res);
+      if(res.data == 0)
+        $scope.deployed = false;
+      else
+        $scope.deployed = true;
+      console.log($scope.deployed);
+    }).catch(function(err){
+      console.log(err);
+    });
+
+    $scope.deployContract = function(){
+      ModalService.showModal({
+        templateUrl: "partials/modal/deploy.html",
+        controller: "DeployController",
+        inputs: {
+          title: "Do you want really deploy contract in blockchain?"
+        }
+      }).then(function(modal) {
+        modal.element.modal();
+        modal.close.then(function(result) {
+          if(result.msg){
+            EntranceService.deploy().then(function(res){
+              $scope.deployed = true;
+            }).catch(function(err){
+              console.log(res);
+            });
+          }
+        });
+      });
+    };
+
     $scope.entranceModalShow = function(status){
       var modalTitle = status ? "Do you want to register your entry?" : "Do you want to register your output?";
       ModalService.showModal({

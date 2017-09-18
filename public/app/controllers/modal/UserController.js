@@ -13,7 +13,7 @@ angular.module('entrance-points').controller('UserController',['$scope','close',
       var res = {
         'msg': result,
         'body': {
-          'privateKey': $scope.address,
+          'employeeId': $scope.address,
           'inputTime': $scope.input.getHours()+':'+$scope.input.getMinutes(),
           'outputTime': $scope.output.getHours()+':'+$scope.output.getMinutes()
         }

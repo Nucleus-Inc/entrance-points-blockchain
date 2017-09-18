@@ -3,6 +3,10 @@
 </div>
 <div class="container">
   <div class="row">
+    <h3>Deploys</h3>
+    <button ng-disabled="deployed" ng-click="deployContract()" class="btn btn-outline-success">Contract</button>
+  </div>
+  <div class="row">
     <h3>Entrance Points</h3>
     <button ng-click="entranceModalShow(true)" class="btn btn-outline-primary">Input</button>
     <button ng-click="entranceModalShow(false)" class="btn btn-outline-secondary">Output</button>
@@ -25,7 +29,7 @@
         <h3 class="panel-title">Blockchain Logs</h3>
       </div>
       <div style="background-color: #444; height: 400px; max-height: 550px; overflow-y: scroll; overflow-x: none;" class="panel-body">
-        <pre style="background-color: #444; color: white;">{{customer | json}}</pre>
+        <pre ng-repeat="customer in customers" style="background-color: #444; color: white;">{{customer | json}}</pre>
       </div>
     </div>
   </div>
