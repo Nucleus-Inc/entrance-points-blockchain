@@ -1,19 +1,20 @@
 angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService',
   function($scope,ModalService,EntranceService){
 
-    EntranceService.logs().then(function(res){
-      $scope.customers = res.data;
-    }).catch(function(err){
-      console.log(err);
-    });
+    var showLogs = function(){
+      EntranceService.logs().then(function(res){
+        $scope.customers = res.data;
+      }).catch(function(err){
+        console.log(err);
+      });
+    };
+    showLogs();
 
     EntranceService.address().then(function(res){
-      console.log(res);
       if(res.data == 0)
         $scope.deployed = false;
       else
         $scope.deployed = true;
-      console.log($scope.deployed);
     }).catch(function(err){
       console.log(err);
     });
@@ -31,8 +32,9 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
           if(result.msg){
             EntranceService.deploy().then(function(res){
               $scope.deployed = true;
+              showLogs();
             }).catch(function(err){
-              console.log(res);
+              //console.log(res);
             });
           }
         });
@@ -54,15 +56,15 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
             result.body.status = status;
             if(status){ //input
               EntranceService.input(result.body).then(function(res){
-                console.log(res);
+                //console.log(res);
               }).catch(function(err){
-                console.log(err);
+                //console.log(err);
               });
             }else{ //output
               EntranceService.output(result.body).then(function(res){
-                console.log(res);
+                //console.log(res);
               }).catch(function(err){
-                console.log(err);
+                //console.log(err);
               });
             }
           }
@@ -83,9 +85,9 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
         modal.close.then(function(result) {
           if(result.msg){
             EntranceService.create(result.body).then(function(res){
-              $scope.customer = res.data;
+              //console.log(res);
             }).catch(function(err){
-              console.log(err);
+              //console.log(err);
             });
           }
         });
@@ -118,7 +120,7 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
         modal.element.modal();
         modal.close.then(function(result) {
           //$scope.message = result ? "You said Yes" : "You said No";
-          console.log(result);
+          //console.log(result);
         });
       });
     };
