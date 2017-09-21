@@ -17,8 +17,8 @@ module.exports = function(app){
   var EntrancePoints = web3.eth.contract(abi);
   var instanceContract = EntrancePoints.at(config.address);
 
-  var event = instanceContract.EmployeeCreateEvent({},{fromBlock: 'latest'});
-  event.watch(function(err,data){
+  var createEvent = instanceContract.EmployeeCreateEvent({},{fromBlock: 'latest'});
+  createEvent.watch(function(err,data){
     if(!err){
       Entrance.create({
         address: data.address,
@@ -39,6 +39,72 @@ module.exports = function(app){
     }
   });
 
+  var recordEvent = instanceContract.RecordEvent({},{fromBlock: 'latest'});
+  recordEvent.watch(function(err,data){
+    if(!err){
+      Entrance.create({
+        address: data.address,
+        blockNumber: data.blockNumber,
+        transactionHash: data.transactionHash,
+        transactionIndex: data.transactionIndex,
+        blockHash: data.blockHash,
+        logIndex: data.logIndex,
+        removed: data.removed,
+        event: data.event,
+        args: {
+          _employee_id: data.args._employee_id,
+          _time_input: data.args._time_input,
+          _time_output: data.args._time_output,
+          _code: data.args._code
+        }
+      }).then(function(data){}).catch(function(err){});
+    }
+  });
+
+  var delRecordEvent = instanceContract.RecordDeleteEvent({},{fromBlock: 'latest'});
+  delRecordEvent.watch(function(err,data){
+    if(!err){
+      Entrance.create({
+        address: data.address,
+        blockNumber: data.blockNumber,
+        transactionHash: data.transactionHash,
+        transactionIndex: data.transactionIndex,
+        blockHash: data.blockHash,
+        logIndex: data.logIndex,
+        removed: data.removed,
+        event: data.event,
+        args: {
+          _employee_id: data.args._employee_id,
+          _time_input: data.args._time_input,
+          _time_output: data.args._time_output,
+          _code: data.args._code
+        }
+      }).then(function(data){}).catch(function(err){});
+    }
+  });
+
+  var delEmployeeEvent = instanceContract.EmployeeDeleteEvent({},{fromBlock: 'latest'});
+  delEmployeeEvent.watch(function(err,data){
+    if(!err){
+      Entrance.create({
+        address: data.address,
+        blockNumber: data.blockNumber,
+        transactionHash: data.transactionHash,
+        transactionIndex: data.transactionIndex,
+        blockHash: data.blockHash,
+        logIndex: data.logIndex,
+        removed: data.removed,
+        event: data.event,
+        args: {
+          _employee_id: data.args._employee_id,
+          _time_input: data.args._time_input,
+          _time_output: data.args._time_output,
+          _code: data.args._code
+        }
+      }).then(function(data){}).catch(function(err){});
+    }
+  });
+  
   var logNewBlockMined = function(){
     var filter = web3.eth.filter('latest');
     filter.watch(function(error, result){

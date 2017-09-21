@@ -28,6 +28,7 @@
     "helmet": "^3.8.1",
     "method-override": "^2.3.9",
     "mongoose": "^4.11.10",
+    "socket.io": "^2.0.3",
     "web3": "^0.20.0"
   }
 }

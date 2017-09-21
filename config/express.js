@@ -3,13 +3,13 @@ var load = require('express-load');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-//var passport = require('passport');
 var helmet = require('helmet');
 
 module.exports = function(){
 
   var app = express();
 
+  // variável de ambiente
   app.set('port', (process.env.PORT || 5000));
 
   // middlewares
@@ -30,8 +30,6 @@ module.exports = function(){
       saveUninitialized: true
     }
   ));
-  //app.use(passport.initialize());
-  //app.use(passport.session());
 
   app.use(helmet.frameguard());
   app.use(helmet.xssFilter());
