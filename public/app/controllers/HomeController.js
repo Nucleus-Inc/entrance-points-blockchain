@@ -1,6 +1,8 @@
 angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService',
   function($scope,ModalService,EntranceService){
 
+    //var socket = io();
+
     var showLogs = function(){
       EntranceService.logs().then(function(res){
         $scope.customers = res.data;
@@ -85,6 +87,9 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
         modal.close.then(function(result) {
           if(result.msg){
             EntranceService.create(result.body).then(function(res){
+               /*socket.on('create employee', function(msg){
+                  $scope.customers.push(msg);
+               });*/
               //console.log(res);
             }).catch(function(err){
               //console.log(err);
