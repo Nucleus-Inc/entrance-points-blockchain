@@ -1,7 +1,5 @@
-angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService',
-  function($scope,ModalService,EntranceService){
-
-    //var socket = io();
+angular.module('entrance-points').controller('HomeController',['$scope','ModalService','EntranceService','socket',
+  function($scope,ModalService,EntranceService,socket){
 
     var showLogs = function(){
       EntranceService.logs().then(function(res){
@@ -58,15 +56,21 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
             result.body.status = status;
             if(status){ //input
               EntranceService.input(result.body).then(function(res){
-                //console.log(res);
+                socket.on('record event', function(msg){
+                  $scope.customers.push(msg);
+                  EntranceService.save(msg).then(function(res){}).catch(function(err){});
+                });
               }).catch(function(err){
-                //console.log(err);
+                
               });
             }else{ //output
               EntranceService.output(result.body).then(function(res){
-                //console.log(res);
+                socket.on('record event', function(msg){
+                  $scope.customers.push(msg);
+                  EntranceService.save(msg).then(function(res){}).catch(function(err){});
+                });
               }).catch(function(err){
-                //console.log(err);
+                
               });
             }
           }
@@ -86,14 +90,18 @@ angular.module('entrance-points').controller('HomeController',['$scope','ModalSe
         modal.element.modal();
         modal.close.then(function(result) {
           if(result.msg){
-            EntranceService.create(result.body).then(function(res){
-               /*socket.on('create employee', function(msg){
-                  $scope.customers.push(msg);
-               });*/
-              //console.log(res);
-            }).catch(function(err){
-              //console.log(err);
-            });
+            if(status){ //create
+              EntranceService.create(result.body).then(function(res){
+                 socket.on('create employee', function(msg){
+                    $scope.customers.push(msg);
+                    EntranceService.save(msg).then(function(res){}).catch(function(err){});
+                 });
+              }).catch(function(err){
+                
+              });
+            }else{ //delete
+              //delete employee
+            }
           }
         });
       });

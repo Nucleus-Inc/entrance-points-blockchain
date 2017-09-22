@@ -25,7 +25,15 @@ angular.module('entrance-points').service('EntranceService',function($http){
   };
 
   this.create = function(body){
-    return $http.post('/api/contract/user/create',body).then(function(res){
+    return $http.post('/api/contract/user',body).then(function(res){
+      return res;
+    }).catch(function(err){
+      return err;
+    });
+  };
+
+  this.delete = function(body){
+    return $http.delete('/api/contract/user',body).then(function(res){
       return res;
     }).catch(function(err){
       return err;
@@ -34,6 +42,14 @@ angular.module('entrance-points').service('EntranceService',function($http){
 
   this.address = function(){
     return $http.get('/api/contract/address').then(function(res){
+      return res;
+    }).catch(function(err){
+      return err;
+    });
+  };
+
+  this.save = function(body){
+    return $http.post('/api/contract/logs',body).then(function(res){
       return res;
     }).catch(function(err){
       return err;

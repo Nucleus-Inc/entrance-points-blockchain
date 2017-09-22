@@ -38,6 +38,15 @@ module.exports = function(){
   		_time_output: {
   			type: String
   		},
+      _time: {
+        type: String
+      },
+      _date: {
+        type: String
+      },
+      _status: {
+        type: String
+      },
   		_code: {
   			type: String
   		}

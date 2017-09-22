@@ -6,8 +6,9 @@ module.exports = function(app){
   app.route('/api/contract/deploy')
     .get(controller.deployContract);
     
-  app.route('/api/contract/user/create')
-    .post(controller.createUser); 
+  app.route('/api/contract/user')
+    .post(controller.createUser)
+    .delete(controller.deleteUser);
 
   app.route('/api/contract/entrance')
     .post(controller.entrancePoints);
@@ -17,6 +18,7 @@ module.exports = function(app){
   	.get(controller.address);
 
   app.route('/api/contract/logs')
+    .post(controller.save)
   	.get(controller.logs);
 
 }

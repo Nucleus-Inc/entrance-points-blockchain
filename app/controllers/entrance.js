@@ -33,7 +33,7 @@ module.exports = function(app){
       {
         from: web3.eth.accounts[0], 
         data: config.byteCode, 
-        gas: '4300000'
+        gas: '4700000'
       }, function (e, contract){
         if (typeof contract.address !== 'undefined') {
           console.log('Submitted contract creation'+'               fullhash: '+contract.transactionHash);
@@ -58,6 +58,17 @@ module.exports = function(app){
 
   };
 
+  controller.deleteUser = function(req,res){
+
+    instanceContract.employeeDelete.sendTransaction(req.body.employeeId,{from: web3.eth.accounts[0],gas: '3000000'},function(err,result){
+      if(!err){
+        console.log('Submitted transaction'+'       fullhash: '+result);
+        res.json(result);
+      }
+    });
+
+  };
+
   controller.address = function(req,res){
     
     Entrance.find().then(function(data){
@@ -71,6 +82,10 @@ module.exports = function(app){
 
   };
 
+  controller.save = function(req,res){
+    Entrance.create(req.body).then(function(data){res.json(data);}).catch(function(err){res.json(err)});
+  };
+
   controller.logs = function(req,res){
     Entrance.find().then(function(data){res.json(data)}).catch(function(err){res.json(err)});
   };
@@ -78,20 +93,3 @@ module.exports = function(app){
   return controller;
 
 }
-
-/*Entrance.create({
-        address: data.address,
-        blockNumber: data.blockNumber,
-        transactionHash: data.transactionHash,
-        transactionIndex: data.transactionIndex,
-        blockHash: data.blockHash,
-        logIndex: data.logIndex,
-        removed: data.removed,
-        event: data.event,
-        args: {
-          _employee_id: data.args._employee_id,
-          _time_input: data.args._time_input,
-          _time_output: data.args._time_output,
-          _code: data.args._code
-        }
-      }).then(function(data){}).catch(function(err){});*/
